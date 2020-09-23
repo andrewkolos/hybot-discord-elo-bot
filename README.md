@@ -18,7 +18,7 @@ export const basicConfig: HyBotConfig = {
 };
 ```
 
-If you want to use the ELO tracking commands of HyBot, you need to supply a `EloDataService` implementation for the bot to use to store and retrieve user/match data. There are a couple of configurable implementations built-in:
+If you want to use the Elo-tracking commands of HyBot, you need to supply a `EloDataService` implementation for the bot to use to store and retrieve user/match data. There are a couple of configurable implementations built-in:
 
 * SQLite: Can be used to store data in the local file system or in-memory
 * MySQL: A more full-fledged database with built-in network access
@@ -76,7 +76,7 @@ bot.registerCommand(new Timer(config.prefix));
 const client: Discord.Client = await bot.connect();
 console.log(`Bot Client logged in as ${client.user.username}.`);
 
-bot.commandRegistry.registerCommand(new GetTop(config.prefix, dataService, client));
+bot.registerCommand(new GetTop(config.prefix, dataService, client));
 ```
 
 As stated before HyBot is modular and can be re-purposed into any kind of bot that's not necessarily be about tracking Elo scores. One would simply choose not to instantiate and register the built-in commands regarding Elo-tracking (and thus the need for a `EloDataService` is removed). If you are reading this and happen to be interesting in creating your own Discord bot, I suggest considering a more robust and well-documented framework such as `discord-akairo` (we have personally not tried it); though, of course, you are welcome to clone HyBot as well and re-purpose it to your own needs.
