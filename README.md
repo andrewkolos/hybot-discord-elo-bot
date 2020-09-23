@@ -1,7 +1,7 @@
-# HyBot ELO Tracking Bot For Discord
+# HyBot Elo Tracking Bot For Discord
 
-HyBot is a Node.js Discord bot created with the Discord.js framework. With HyBot, users can record matches with simple commands. ELO scores are updated automatically, and users can see ELO scores.
-HyBot is decently modular, and new commands can be added easily by implementing the `Command` interface. HyBot was built primarily with ELO-tracking functionality in mind, but this can be ignored if desired.
+HyBot is a Node.js Discord bot created with the Discord.js framework. With HyBot, users can record matches with simple commands. Elo scores are updated automatically, and users can see Elo scores.
+HyBot is decently modular, and new commands can be added easily by implementing the `Command` interface. HyBot was built primarily with Elo-tracking functionality in mind, but this can be ignored if desired.
 
 # Using the Bot
 
@@ -23,7 +23,7 @@ If you want to use the ELO tracking commands of HyBot, you need to supply a `Elo
 * SQLite: Can be used to store data in the local file system or in-memory
 * MySQL: A more full-fledged database with built-in network access
 
-## Creating a MySQL ELO data service and starting the bot
+## Creating a MySQL Elo data service and starting the bot
 
 
 ### Create an instance of `MySqlEloDataService`
@@ -60,7 +60,7 @@ async function createAndStartBot() {
 // At the end of createAndStartBot...
 
 // As you can see, all HyBot *needs* is the simple config discussed before the data service.
-// The data service is simply used for the ELO-related built-in commands.
+// The data service is simply used for the Elo-related built-in commands.
 const bot = new HyBot(config);
 
 // Here, we add all the built-in commands. The implementer is free to omit any of these commands
@@ -79,7 +79,7 @@ console.log(`Bot Client logged in as ${client.user.username}.`);
 bot.commandRegistry.registerCommand(new GetTop(config.prefix, dataService, client));
 ```
 
-As stated before HyBot is modular and can be re-purposed into any kind of bot that's not necessarily be about tracking ELO scores. One would simply choose not to instantiate and register the built-in commands regarding ELO-tracking (and thus the need for a `EloDataService` is removed). If you are reading this and happen to be interesting in creating your own Discord bot, I suggest considering a more robust and well-documented framework such as `discord-akairo` (we have personally not tried it); though, of course, you are welcome to clone HyBot as well and re-purpose it to your own needs.
+As stated before HyBot is modular and can be re-purposed into any kind of bot that's not necessarily be about tracking Elo scores. One would simply choose not to instantiate and register the built-in commands regarding Elo-tracking (and thus the need for a `EloDataService` is removed). If you are reading this and happen to be interesting in creating your own Discord bot, I suggest considering a more robust and well-documented framework such as `discord-akairo` (we have personally not tried it); though, of course, you are welcome to clone HyBot as well and re-purpose it to your own needs.
 
 # Demo
 
@@ -97,13 +97,13 @@ Use `record` followed by either `winvs` or `lossvs` and mention another user to 
 
 ![Imgur](https://i.imgur.com/UA0nGtM.png)
 
-Each user's ELO rating is updated automatically.
+Each user's Elo rating is updated automatically.
 
 ![Imgur](https://i.imgur.com/GqvCX8z.png)
 
 # MIT License
 
-Copyright (c) 2019 hylaster
+Copyright (c) 2019 hylaster, Andrew Kolos
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
