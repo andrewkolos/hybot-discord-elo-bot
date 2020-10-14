@@ -95,7 +95,7 @@ export class HyBot {
 
     if (messageParts == null) return;
 
-    const command: Command | undefined = this.commandRegistry.getCommandByName(messageParts.commandName);
+    const command: Command | undefined = this.commandsByName.get(messageParts.commandName);
 
     if (command == null) {
       message.channel.send(`There is no *${messageParts.commandName}* command.`);
