@@ -1,8 +1,23 @@
 import { HyBotConfig } from 'src/config/hybot-config';
 
+const envVariableNames = {
+  token: 'HYBOT_TOKEN',
+  owners: 'OWNERS',
+};
+
 export const config: HyBotConfig = {
-  token: 'NTAzNzU4NTM4NDE4NTUyODMy.W803sg.xN0sacfhQTmnFXX0QSFZFJJoY1s',
+  token: getEnvVariableValue(envVariableNames.token),
   prefix: '!',
-  owners: ['368485403340046336'],
+  owners: getOwners(),
   clientConfig: {},
 };
+
+function getOwners(): string[] {
+  return getEnvVariableValue(envVariableNames.owners).split(',');
+}
+
+function getEnvVariableValue(variableName: string): string {
+  const value = process.env[variableName];
+  if (value != null) return value;
+  throw Error(`${variableName} is not defined in the process environment.`);
+}

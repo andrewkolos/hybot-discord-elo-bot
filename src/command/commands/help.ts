@@ -7,7 +7,7 @@ import { CommandSource } from '../command-source';
  * A command that explains what other commands do and how to use them.
  */
 export class Help implements Command {
-  public constructor(private readonly prefix: string, private readonly commands: CommandSource, private readonly exclusionList: string[]) {}
+  public constructor(private readonly prefix: string, private readonly commands: CommandSource, private readonly exclusionList: ReadonlyArray<string>) {}
 
   public readonly name = 'help';
 
@@ -59,7 +59,6 @@ export class Help implements Command {
     let embed = new RichEmbed()
       .setTitle(`Command Description for: ${name}`)
       .setDescription(info.description)
-      .setColor(0x330093);
 
     embed.addField('Format', this.prefix + [name].concat(info.argSpecs.map(cas => `*${cas.name}*`)).join(' '));
 
