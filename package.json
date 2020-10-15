@@ -7,7 +7,7 @@
     "test:mysql-only": "jest --verbose",
     "test:debug": "node --inspect-brk=0.0.0.0 node_modules/jest/bin/jest.js --runInBand --config jest.config.js",
     "test:docker": "docker-compose -f docker-compose-test.yml up --force-recreate --abort-on-container-exit --exit-code-from hybot",
-    "start:example": "ts-node --pretty example-implementation/main.ts"
+    "start:example": "ts-node --pretty src/main.ts"
   },
   "keywords": [],
   "author": "",

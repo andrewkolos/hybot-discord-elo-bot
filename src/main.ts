@@ -1,11 +1,11 @@
 import http from 'http';
-import { HyBot } from '../src/hybot';
-import { EloDataService } from '../src/data/elo-data-service';
-import { GetRating, GetTop, Ping, Record, Roll, Timer } from '../src/command/commands';
-import { Help } from '../src/command/commands/help';
-import { config } from './hy-bot-config';
-import { HyBotConfig } from '../src/config/hybot-config';
-import { SqliteEloDataService } from '../src/data/sql/sqlite-implementation/sqlite-data-service';
+import { HyBot } from './bot/hybot';
+import { EloDataService } from './bot/data/elo-data-service';
+import { GetRating, GetTop, Ping, Record, Roll, Timer } from './bot/command/commands';
+import { Help } from './bot/command/commands/help';
+import { config } from './config';
+import { HyBotConfig } from './bot/config/hybot-config';
+import { SqliteEloDataService } from './bot/data/sql/sqlite-implementation/sqlite-data-service';
 
 // Spins up an implementation of Hybot.
 

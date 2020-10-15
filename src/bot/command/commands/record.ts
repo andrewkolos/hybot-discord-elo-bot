@@ -1,7 +1,7 @@
 import { Command, CommandHelpInfo } from '../command';
 import EloRating from 'elo-rating';
 import { Snowflake, Message } from 'discord.js';
-import { EloDataService } from 'src/data/elo-data-service';
+import { EloDataService } from '../../data/elo-data-service';
 import { getRatingOrDefault } from '../common/get-rating-or-default';
 
 /**

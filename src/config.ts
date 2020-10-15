@@ -1,4 +1,7 @@
-import { HyBotConfig } from 'src/config/hybot-config';
+import { HyBotConfig } from './bot/config/hybot-config';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const envVariableNames = {
   token: 'HYBOT_TOKEN',

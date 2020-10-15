@@ -1,5 +1,5 @@
 import { Command, CommandHelpInfo } from '../command';
-import { UserRatingPair, EloDataService } from 'src/data/elo-data-service';
+import { UserRatingPair, EloDataService } from '../../data/elo-data-service';
 import { Client, Message } from 'discord.js';
 
 export class GetTop implements Command {

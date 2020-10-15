@@ -1,5 +1,5 @@
 import { DataServiceTester } from './data-service-tester';
-import { SqliteEloDataService } from '../../src/data/sql/sqlite-implementation/sqlite-data-service';
+import { SqliteEloDataService } from '../../src/bot/data/sql/sqlite-implementation/sqlite-data-service';
 import { SnowflakeUtil } from 'discord.js';
 
 describe(nameof<SqliteEloDataService>(), () => {

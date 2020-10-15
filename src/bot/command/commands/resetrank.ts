@@ -1,6 +1,6 @@
 import { Command, CommandHelpInfo } from '../command';
 import { Message, Snowflake } from 'discord.js';
-import { EloDataService } from 'src/data/elo-data-service';
+import { EloDataService } from '../../data/elo-data-service';
 
 export class ResetRank implements Command {
   public constructor(private commandPrefix: string, private authorizedUsers: Snowflake[],
