@@ -4,8 +4,6 @@ import { Client, Message } from 'discord.js';
 
 export class GetTop implements Command {
 
-  public constructor(private prefix: string, private dataService: EloDataService, private client: Client) { }
-
   public readonly name = 'gettop';
 
   public readonly helpInfo: CommandHelpInfo = {
@@ -15,6 +13,8 @@ export class GetTop implements Command {
     ],
     examples: [`${this.prefix + this.name} @ELO Bot`]
   };
+
+  public constructor(private prefix: string, private dataService: EloDataService, private client: Client) { }
 
   public async action(message: Message, _args: string[]) {
     const topUsers: UserRatingPair[] = await this.dataService.getTopNPlayers(message.guild.id, 2);

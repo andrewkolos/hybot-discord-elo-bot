@@ -7,7 +7,6 @@ import { CommandSource } from '../command-source';
  * A command that explains what other commands do and how to use them.
  */
 export class Help implements Command {
-  public constructor(private readonly prefix: string, private readonly commands: CommandSource, private readonly exclusionList: ReadonlyArray<string>) {}
 
   public readonly name = 'help';
 
@@ -16,11 +15,16 @@ export class Help implements Command {
     argSpecs: [
       {
         name: 'command_name',
-        description: 'If given, I will retrieve information for this command. If not given, I will give you a list of commands.'
-      }
+        description: dedent`If given, I will retrieve information for this command.
+                            If not given, I will give you a list of commands.`,
+      },
     ],
     examples: [],
   };
+
+  public constructor(private readonly prefix: string,
+    private readonly commands: CommandSource,
+    private readonly exclusionList: ReadonlyArray<string>) {}
 
   public async action(message: Message, args: string[]) {
     const channel = message.channel;
@@ -31,7 +35,8 @@ export class Help implements Command {
       const names = commands.map(c => c.name).filter(name => !this.exclusionList.includes(name))
                                                           .map(name => `\`${name}\``);
       channel.send(dedent`Available commands: ${names.join(', ')}.
-                          Type \`${this.prefix + this.name}\` followed by the name of any command to see how to use it.`);
+                          Type \`${this.prefix + this.name}\` followed by the name of
+                          any command to see how to use it.`);
     } else {
       const nameOfCommandInQuestion = args[0];
       const command = commands.find(c => c.name === nameOfCommandInQuestion);
@@ -58,7 +63,7 @@ export class Help implements Command {
 
     let embed = new RichEmbed()
       .setTitle(`Command Description for: ${name}`)
-      .setDescription(info.description)
+      .setDescription(info.description);
 
     embed.addField('Format', this.prefix + [name].concat(info.argSpecs.map(cas => `*${cas.name}*`)).join(' '));
 

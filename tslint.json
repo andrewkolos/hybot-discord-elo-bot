@@ -45,6 +45,7 @@
         ],
         "object-literal-sort-keys": false,
         "align": false,
-        "arrow-parens": false
+        "arrow-parens": false,
+        "radix": false
     }
 }

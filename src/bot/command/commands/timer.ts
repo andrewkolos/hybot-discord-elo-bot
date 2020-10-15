@@ -3,8 +3,6 @@ import { Message } from 'discord.js';
 
 export class Timer implements Command {
 
-  public constructor(private prefix: string) {}
-
   public readonly name = 'timer';
 
   public readonly helpInfo: CommandHelpInfo = {
@@ -18,10 +16,12 @@ export class Timer implements Command {
     ]
   };
 
+  public constructor(private prefix: string) { }
+
   public async action(message: Message, args: string[]) {
     const time = Number(args[0]) * 1000;
     const author = message.author;
-    setTimeout(function () {
+    setTimeout(() => {
       message.channel.send(`${author}'s timer of length ${args[0]} seconds has reached zero.`);
     }, time);
   }

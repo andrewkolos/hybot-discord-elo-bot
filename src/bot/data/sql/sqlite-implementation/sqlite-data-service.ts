@@ -74,7 +74,7 @@ export class SqliteEloDataService implements EloDataService {
   public async getRating(user: string, server: string): Promise<number | undefined> {
     const query = `SELECT * FROM ${this.userTableName} WHERE user = ? AND server = ?`;
     const result = await this.db.get(query, user, server);
-    return result != null ? result.rating : -1;
+    return result != null ? result.rating : undefined;
   }
 
   /** @inheritdoc */

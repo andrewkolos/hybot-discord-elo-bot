@@ -3,6 +3,7 @@ import EloRating from 'elo-rating';
 import { Snowflake, Message } from 'discord.js';
 import { EloDataService } from '../../data/elo-data-service';
 import { getRatingOrDefault } from '../common/get-rating-or-default';
+import dedent from 'dedent';
 
 /**
  * The textual representation of a user's match out come with another user.
@@ -11,42 +12,49 @@ import { getRatingOrDefault } from '../common/get-rating-or-default';
  */
 enum OutcomeArgumentValue {
   Win = 'winvs',
-  Loss = 'lossvs'
+  Loss = 'lossvs',
 }
 
-type ParsedDuration = {
-  days: number,
-  hours: number,
-  minutes: number,
-  seconds: number,
-  milliseconds: number
-};
+interface ParsedDuration {
+  days: number;
+  hours: number;
+  minutes: number;
+  seconds: number;
+  milliseconds: number;
+}
 
 /**
  * Command to record a match between two users and update their ratings.
  */
 export class Record implements Command {
-  /**
-   * Creates an instance of the `record` command.
-   * @param prefix The command's prefix.
-   * @param dataService The data service instance to use to communicate with the data store.
-   * @param minTimeBetweenMatches The minimum time two players have to wait before recording another match between one another, measured in milliseconds.
-   */
-  public constructor(private prefix: string, private dataService: EloDataService, private minTimeBetweenMatches: number = 1000 * 5) { }
 
   public readonly name = 'record';
 
   public readonly helpInfo: CommandHelpInfo = {
     description: 'Records a match between you and an opponent.',
     argSpecs: [
-      { name: 'outcome', description: `'${OutcomeArgumentValue.Win}' if you won, or '${OutcomeArgumentValue.Loss}' if you lost.` },
-      { name: 'user', description: `mention the user you played against (i.e. @ them)` }
+      {
+        name: 'outcome', description: dedent`'${OutcomeArgumentValue.Win}' if you won,
+                                              or '${OutcomeArgumentValue.Loss}' if you lost.`,
+      },
+      { name: 'user', description: `mention the user you played against (i.e. @ them)` },
     ],
     examples: [
       `${this.prefix + this.name} ${OutcomeArgumentValue.Win} @SomeUser`,
-      `${this.prefix + this.name} ${OutcomeArgumentValue.Loss} @SomeUser`
-    ]
+      `${this.prefix + this.name} ${OutcomeArgumentValue.Loss} @SomeUser`,
+    ],
   };
+
+  /**
+   * Creates an instance of the `record` command.
+   * @param prefix The command's prefix.
+   * @param dataService The data service instance to use to communicate with the data store.
+   * @param minTimeBetweenMatches The minimum time two players have to wait before
+   *  recording another match between one another, measured in milliseconds.
+   */
+  public constructor(private readonly prefix: string,
+    private readonly dataService: EloDataService,
+    private readonly minTimeBetweenMatches: number = 1000 * 5) { }
 
   public async action(message: Message, args: string[]) {
     const result = args[0].toLowerCase();
@@ -59,7 +67,8 @@ export class Record implements Command {
     const opponent = message.mentions.members.first().user;
     const author = message.author;
     if (opponent == null) {
-      message.channel.send('Specify who your opponent was by mentioning your opponent as the second argument (e.g. @MyOpponent)');
+      message.channel.send(dedent`Specify who your opponent was by mentioning
+                                  your opponent as the second argument (e.g. @MyOpponent)`);
       return;
     }
 
@@ -67,7 +76,7 @@ export class Record implements Command {
       message.channel.send('Sorry, but playing with yourself is against the rules.');
       return;
     } else if (opponent.bot) {
-      message.channel.send("Bots wouldn't mind battling you, but you would lose in six turns.");
+      message.channel.send('Bots wouldn\'t mind battling you, but you would lose in six turns.');
       return;
     }
 
@@ -78,17 +87,23 @@ export class Record implements Command {
     const eligibleForMatch = await this.enoughTimeHasPassedSinceLastMatch(author.id, opponent.id, server, today);
 
     if (eligibleForMatch) {
-      await Promise.all([this.recordMatch(author.id, opponent.id, server, today, winner.id, author.id, this.dataService),
-        this.updateRatings(author.id, opponent.id, server, winner.id, this.dataService)]);
+      await Promise.all([this.recordMatch(author.id, opponent.id, server,
+        today, winner.id, author.id, this.dataService),
+      this.updateRatings(author.id, opponent.id, server, winner.id, this.dataService)]);
 
       message.channel.send(`Recording ${message.author.username}'s ${result} ${opponent}`);
     } else {
-      message.channel.send(`<@${message.author.id}>, you must wait at least ${this.formatTime(this.minTimeBetweenMatches)}` +
-        ` before recording another match within a specific opponent.`);
+      message.channel.send(dedent`<@${message.author.id}>, you must wait at least 
+        ${this.formatTime(this.minTimeBetweenMatches)} before recording another match
+        within a specific opponent.`);
     }
   }
 
-  private async enoughTimeHasPassedSinceLastMatch(user: Snowflake, otherUser: Snowflake, server: Snowflake, time: Date) {
+  private async enoughTimeHasPassedSinceLastMatch(user: Snowflake,
+    otherUser: Snowflake,
+    server: Snowflake,
+    time: Date) {
+
     const matchHistoryWithinMinTime = await this.dataService.getMatchHistory(user, otherUser, server,
       new Date(time.getTime() - this.minTimeBetweenMatches), time);
     return matchHistoryWithinMinTime.length === 0;
@@ -98,16 +113,16 @@ export class Record implements Command {
     let remain = durationInMs;
 
     const days = Math.floor(remain / (1000 * 60 * 60 * 24));
-    remain = remain % (1000 * 60 * 60 * 24)
+    remain = remain % (1000 * 60 * 60 * 24);
 
     const hours = Math.floor(remain / (1000 * 60 * 60));
-    remain = remain % (1000 * 60 * 60)
+    remain = remain % (1000 * 60 * 60);
 
     const minutes = Math.floor(remain / (1000 * 60));
-    remain = remain % (1000 * 60)
+    remain = remain % (1000 * 60);
 
     const seconds = Math.floor(remain / (1000));
-    remain = remain % (1000)
+    remain = remain % (1000);
 
     const milliseconds = remain;
 
@@ -116,7 +131,7 @@ export class Record implements Command {
       hours,
       minutes,
       seconds,
-      milliseconds
+      milliseconds,
     };
   }
 
@@ -155,7 +170,7 @@ export class Record implements Command {
     winner: Snowflake, dataService: EloDataService) {
 
     const [authorRating, opponentRating] = await Promise.all([getRatingOrDefault(firstUser, server, dataService),
-      getRatingOrDefault(secondUser, server, dataService)]);
+    getRatingOrDefault(secondUser, server, dataService)]);
 
     const { winnersNewRating: firstUsersNewRating,
       losersNewRating: secondUsersNewRating } = winner === firstUser
@@ -163,7 +178,7 @@ export class Record implements Command {
         : this.getRatingsAfterMatch(opponentRating, authorRating);
 
     await Promise.all([dataService.setRating(firstUser, server, firstUsersNewRating),
-      dataService.setRating(secondUser, server, secondUsersNewRating)]);
+    dataService.setRating(secondUser, server, secondUsersNewRating)]);
   }
 
   /**
@@ -176,7 +191,7 @@ export class Record implements Command {
     const eloResults = EloRating.calculate(winnersRating, losersRating, true);
     return {
       winnersNewRating: eloResults.playerRating,
-      losersNewRating: eloResults.opponentRating
+      losersNewRating: eloResults.opponentRating,
     };
   }
 

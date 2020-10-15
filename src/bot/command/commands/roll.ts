@@ -3,8 +3,6 @@ import { TextChannel, DMChannel, GroupDMChannel, Message } from 'discord.js';
 
 export class Roll implements Command {
 
-  constructor(private prefix: string) { }
-
   public readonly name = 'roll';
 
   public readonly helpInfo: CommandHelpInfo = {
@@ -15,9 +13,11 @@ export class Roll implements Command {
     ],
     examples: [
       `${this.prefix + this.name}3d6+4 => rolls three six-sided dice, and adds 4 to the result.`,
-      `${this.prefix + this.name}*2d4-3* => rolls two four-sided dice, and substracts 3 from the result.`
+      `${this.prefix + this.name}*2d4-3* => rolls two four-sided dice, and substracts 3 from the result.`,
     ]
   };
+
+  constructor(private prefix: string) { }
 
   public async action(message: Message, args: string[]) {
     if (args.length < 1) {

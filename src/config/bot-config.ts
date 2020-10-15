@@ -1,5 +1,6 @@
-import { HyBotConfig } from './bot/hybot-config';
+import { HyBotConfig } from '../bot/hybot-config';
 import dotenv from 'dotenv';
+import { getEnvVariableValue } from './getEnvVariableValue';
 
 dotenv.config();
 
@@ -8,7 +9,7 @@ const envVariableNames = {
   owners: 'OWNERS',
 };
 
-export const config: HyBotConfig = {
+export const botConfig: HyBotConfig = {
   token: getEnvVariableValue(envVariableNames.token),
   prefix: '!',
   owners: getOwners(),
@@ -17,10 +18,4 @@ export const config: HyBotConfig = {
 
 function getOwners(): string[] {
   return getEnvVariableValue(envVariableNames.owners).split(',');
-}
-
-function getEnvVariableValue(variableName: string): string {
-  const value = process.env[variableName];
-  if (value != null) return value;
-  throw Error(`${variableName} is not defined in the process environment.`);
 }
