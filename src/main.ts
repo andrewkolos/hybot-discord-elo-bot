@@ -3,17 +3,16 @@ import { EloDataService } from './bot/data/elo-data-service';
 import { GetRating, GetTop, Ping, Record, Roll, Timer } from './bot/command/commands';
 import { Help } from './bot/command/commands/help';
 import { config } from './config';
-import { HyBotConfig } from './bot/config/hybot-config';
 import { SqliteEloDataService } from './bot/data/sql/sqlite-implementation/sqlite-data-service';
 
 // Spins up an implementation of Hybot.
 
 async function start() {
   const dataService = await SqliteEloDataService.createInMemoryService();
-  startBot(config, dataService);
+  startBot(dataService);
 }
 
-async function startBot(config: HyBotConfig, dataService: EloDataService) {
+async function startBot(dataService: EloDataService) {
   const bot = new HyBot(config);
   bot.registerCommand(new GetRating(config.prefix, dataService));
   bot.registerCommand(new Help(config.prefix, () => bot.getCommands(), []));

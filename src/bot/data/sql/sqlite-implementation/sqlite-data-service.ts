@@ -47,7 +47,7 @@ export class SqliteEloDataService implements EloDataService {
   private readonly matchTableName: string;
 
   private constructor(private readonly db: Database<sqlite3.Database, sqlite3.Statement>,
-                      userTableName: string, matchTableName: string) {
+    userTableName: string, matchTableName: string) {
 
     userTableName = sanitizeTableName(userTableName);
     matchTableName = sanitizeTableName(matchTableName);
@@ -85,11 +85,11 @@ export class SqliteEloDataService implements EloDataService {
 
   /** @inheritdoc */
   public async addMatch(user: string,
-                        otherUser: string,
-                        server: string,
-                        date: Date,
-                        winner: string,
-                        author: string): Promise<void> {
+    otherUser: string,
+    server: string,
+    date: Date,
+    winner: string,
+    author: string): Promise<void> {
 
     const [user1, user2] = getUsersAsOrderedPair(user, otherUser);
 
@@ -99,10 +99,11 @@ export class SqliteEloDataService implements EloDataService {
 
   /** @inheritdoc */
   public async getMatchHistory(user: string,
-                               otherUser: string,
-                               server: string,
-                               startDate?: Date,
-                               endDate?: Date): Promise<DatedMatchOutcome[]> {
+    otherUser: string,
+    server: string,
+    startDate?: Date,
+    endDate?: Date): Promise<DatedMatchOutcome[]> {
+
     const [user1, user2] = getUsersAsOrderedPair(user, otherUser);
 
     const params: any[] = [];

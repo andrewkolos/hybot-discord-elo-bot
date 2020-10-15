@@ -1,4 +1,4 @@
-import { HyBotConfig } from './bot/config/hybot-config';
+import { HyBotConfig } from './bot/hybot-config';
 import dotenv from 'dotenv';
 
 dotenv.config();

@@ -1,24 +1,24 @@
 import Discord from 'discord.js';
-import { EloDataService } from '../data/elo-data-service';
+import { EloDataService } from './data/elo-data-service';
 
 export interface HyBotConfig {
   /** Token to be used for the client to login. */
-  token: string,
+  token: string;
 
   /**
    * The prefix of a message that indicates that
    */
-  prefix: string,
+  prefix: string;
 
   /**
    * The owning user(s) of the bot. These users can be given privilege needed to use secured bot commands.
    */
-  owners: Discord.Snowflake[],
+  owners: Discord.Snowflake[];
 
   /**
    * Option for the bot's client.
    */
-  clientConfig: Discord.ClientOptions | undefined,
+  clientConfig: Discord.ClientOptions | undefined;
 }
 
 export interface MatchRecordingValidationContext {

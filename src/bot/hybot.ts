@@ -1,5 +1,5 @@
 import Discord, { Client } from 'discord.js';
-import { HyBotConfig } from './config/hybot-config';
+import { HyBotConfig } from './hybot-config';
 import { Command } from './command/command';
 import { CommandMessageParts, parseCommand } from './command/message-parser';
 
