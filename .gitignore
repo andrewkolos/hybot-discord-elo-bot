@@ -69,5 +69,3 @@ typings/
 # vuepress build output
 .vuepress/dist
 sqlite-test.db
-
-.env

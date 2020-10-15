@@ -1,5 +1,5 @@
 import { EloDataService, DatedMatchOutcome, UserRatingPair } from '../../elo-data-service';
-import { open, Database, ISqlite, Statement } from 'sqlite';
+import { open, Database } from 'sqlite';
 import sqlite3 from 'sqlite3';
 import dedent from 'dedent';
 import { getUsersAsOrderedPair } from '../../../common';
@@ -66,33 +66,21 @@ export class SqliteEloDataService implements EloDataService {
   /** @inheritdoc */
   public async isUserRated(user: string, server: string): Promise<boolean> {
     const query = `SELECT * FROM ${this.userTableName} WHERE user = ? AND server = ?`;
-
-    const statement = await this.db.prepare(query);
-    const result = await statement.get(user, server);
-
-    await statement.finalize();
-
+    const result = await this.db.get(query, user, server);
     return result != null;
   }
 
   /** @inheritdoc */
   public async getRating(user: string, server: string): Promise<number | undefined> {
     const query = `SELECT * FROM ${this.userTableName} WHERE user = ? AND server = ?`;
-
-    const statement = await this.db.prepare(query);
-    const result = await statement.get(user, server);
-
-    await statement.finalize();
+    const result = await this.db.get(query, user, server);
     return result != null ? result.rating : -1;
   }
 
   /** @inheritdoc */
   public async setRating(user: string, server: string, rating: number): Promise<void> {
     const query = dedent`INSERT INTO ${this.userTableName} (user,server,rating) VALUES (?, ?, ?)`;
-
-    const statement = await this.db.prepare(query);
-    await statement.run(user, server, rating);
-    await statement.finalize();
+    await this.db.run(query, user, server, rating);
   }
 
   /** @inheritdoc */
@@ -100,9 +88,7 @@ export class SqliteEloDataService implements EloDataService {
     const [user1, user2] = getUsersAsOrderedPair(user, otherUser);
 
     const query = `INSERT INTO ${this.matchTableName} (user1,user2,server,date,winner,author) VALUES (?,?,?,?,?,?)`;
-    const statement = await this.db.prepare(query);
-    await statement.run(user1, user2, server, date.toISOString(), winner, author);
-    await statement.finalize();
+    await this.db.run(query, user1, user2, server, date.toISOString(), winner, author);
   }
 
   /** @inheritdoc */
@@ -125,9 +111,7 @@ export class SqliteEloDataService implements EloDataService {
     query = query + 'ORDER BY date ASC';
     params.unshift(user1, user2, server);
 
-    const statement = await this.db.prepare(query);
-    const results = await statement.all(...params);
-    await statement.finalize();
+    const results = await this.db.all(query, ...params);
     return results.map((result: any) => ({
       date: new Date(result.date),
       winner: result.winner,
@@ -138,11 +122,7 @@ export class SqliteEloDataService implements EloDataService {
   /** @inheritdoc */
   public async getTopNPlayers(server: string, n: number): Promise<UserRatingPair[]> {
     const query = `SELECT user, rating FROM ${this.userTableName} WHERE server = ? ORDER BY rating DESC LIMIT ?`;
-    const statement = await this.db.prepare(query);
-    const results = await statement.all(server, n);
-
-    await statement.finalize();
-
+    const results = await this.db.all(query, server, n);
     return results;
   }
 
@@ -151,17 +131,7 @@ export class SqliteEloDataService implements EloDataService {
    */
   public async deleteAllData(): Promise<this> {
     const tables = [this.userTableName, this.matchTableName];
-
-    const statements: Statement<sqlite3.Statement>[] = [];
-    const promises: Promise<ISqlite.RunResult>[] = [];
-    tables.forEach(async (table: string) => {
-      const query = `DELETE FROM ${table}`;
-      const statement = await this.db.prepare(query);
-      statements.push(statement);
-      promises.push(statement.run());
-    });
-
-    statements.forEach(s => s.finalize());
+    const promises = tables.map(async (table: string) => this.db.exec(`DELETE FROM ${table}`));
     await Promise.all(promises);
     return this;
   }
@@ -173,12 +143,8 @@ export class SqliteEloDataService implements EloDataService {
    */
   private async tableExists(tableName: string) {
     tableName = sanitizeTableName(tableName);
-
-    const query = await this.db.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name=?");
-    const resp = await query.get(tableName);
-
-    await query.finalize();
-
+    const query = "SELECT name FROM sqlite_master WHERE type='table' AND name=?";
+    const resp = await this.db.get(query, tableName);
     return resp != null;
   }
 
