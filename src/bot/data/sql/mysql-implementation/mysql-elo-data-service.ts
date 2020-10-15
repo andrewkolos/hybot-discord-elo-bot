@@ -7,7 +7,9 @@ import { getUsersAsOrderedPair } from '../../../common';
 
 export class MySqlEloDataService implements EloDataService {
 
-  private constructor(private pool: Pool, private userTableName: string, private matchTableName: string) { }
+  private constructor(private readonly pool: Pool,
+    private readonly userTableName: string,
+    private readonly matchTableName: string) { }
 
   /**
    * Creates service.

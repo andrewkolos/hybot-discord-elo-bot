@@ -104,6 +104,10 @@ export class InMemoryEloDataService implements EloDataService {
     return Promise.resolve(topNPlayers.reverse());
   }
 
+  public deleteAllData() {
+    this.serverInfo.clear();
+  }
+
   private getUserRating(user: UserSnowFlake, server: ServerSnowFlake): number | undefined {
     const serverInfo = this.getServerInformation(server);
 

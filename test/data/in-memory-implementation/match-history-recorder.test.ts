@@ -1,6 +1,6 @@
-import { MatchHistoryRecorder } from '../../../src/data/in-memory-implementation/match-history-recorder';
+import { MatchHistoryRecorder } from '../../../src/bot/data/in-memory-implementation/match-history-recorder';
 import { SnowflakeUtil } from 'discord.js';
-import { DatedMatchOutcome } from '../../../src/data/elo-data-service';
+import { DatedMatchOutcome } from '../../../src/bot/data/elo-data-service';
 
 const user1 = SnowflakeUtil.generate();
 const user2 = SnowflakeUtil.generate();
