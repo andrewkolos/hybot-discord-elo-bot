@@ -1,4 +1,3 @@
-import http from 'http';
 import { HyBot } from './bot/hybot';
 import { EloDataService } from './bot/data/elo-data-service';
 import { GetRating, GetTop, Ping, Record, Roll, Timer } from './bot/command/commands';
@@ -9,8 +8,8 @@ import { SqliteEloDataService } from './bot/data/sql/sqlite-implementation/sqlit
 
 // Spins up an implementation of Hybot.
 
-function start() {
-  const dataService = SqliteEloDataService.createInMemoryService();
+async function start() {
+  const dataService = await SqliteEloDataService.createInMemoryService();
   startBot(config, dataService);
 }
 
@@ -29,9 +28,4 @@ async function startBot(config: HyBotConfig, dataService: EloDataService) {
   bot.registerCommand(new GetTop(config.prefix, dataService, client));
 }
 
-start();
-
-// Prevent Heroku shelving our app.
-setInterval(() => {
-  http.get('http://hy-bot-hero-sql.herokuapp.com');
-}, 900000);
+start().catch(errReason => console.log(errReason));
