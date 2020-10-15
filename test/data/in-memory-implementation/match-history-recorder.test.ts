@@ -13,7 +13,7 @@ describe(nameof(MatchHistoryRecorder), () => {
     expect(recorder.getMatchHistory(user1, user2)).toEqual([{
       date: matchDate,
       winner: user1,
-      author: user2
+      author: user2,
     }]);
   });
 
@@ -34,8 +34,8 @@ describe(nameof(MatchHistoryRecorder), () => {
 
   it('correctly stores the match history and in chronological order', () => {
     const recorder = new MatchHistoryRecorder();
-    const earlierDate = new Date(2019,0,1);
-    const laterDate = new Date(2019,0,2);
+    const earlierDate = new Date(2019, 0, 1);
+    const laterDate = new Date(2019, 0, 2);
 
     recorder.recordMatch(user1, user2, laterDate, user1, user1);
     recorder.recordMatch(user1, user2, earlierDate, user1, user1);

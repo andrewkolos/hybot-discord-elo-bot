@@ -1,4 +1,5 @@
-import { SqliteEloDataService, SqliteEloDataServiceArgs } from '../../src/bot/data/sql/sqlite-implementation/sqlite-data-service';
+import { SqliteEloDataService,
+   SqliteEloDataServiceArgs } from '../../src/bot/data/sql/sqlite-implementation/sqlite-data-service';
 import { SnowflakeUtil } from 'discord.js';
 import { dateDiffInMinutes, dayBefore, withinOneMs } from './util';
 import { DatedMatchOutcome } from 'src/bot/data/elo-data-service';
@@ -18,7 +19,7 @@ const user2 = SnowflakeUtil.generate();
 
 describe(nameof<SqliteEloDataService>(), () => {
 
-  it("can store a user's rating", async () => {
+  it('can store a user\'s rating', async () => {
     const dataService = await SqliteEloDataService.createInMemoryService();
     const rating = 123;
 
@@ -27,7 +28,7 @@ describe(nameof<SqliteEloDataService>(), () => {
     await expect(dataService.getRating(user1, server1)).resolves.toEqual(rating);
   });
 
-  it("uniquely identifies a user's rating by server", async () => {
+  it('uniquely identifies a user\'s rating by server', async () => {
     const dataService = await SqliteEloDataService.createInMemoryService();
     const ratingOnServer1 = 123;
     const ratingOnServer2 = 456;
@@ -62,6 +63,7 @@ describe(nameof<SqliteEloDataService>(), () => {
     expect(top2[1]).toEqual({ user: user4, rating: user4Rating });
   });
 
+  // tslint:disable-next-line: max-line-length
   it('can correctly retrieve matches that occur on or after a given start date (precise within two seconds)', async () => {
     const dataService = await SqliteEloDataService.createInMemoryService();
 
@@ -90,6 +92,7 @@ describe(nameof<SqliteEloDataService>(), () => {
     expect(foundOneMsBeforeMatch).toBe(false);
   });
 
+  // tslint:disable-next-line: max-line-length
   it('can correctly retrieve matches that occur on or before a given end date (precise within two seconds)', async () => {
     const dataService = await SqliteEloDataService.createInMemoryService();
 
@@ -103,7 +106,7 @@ describe(nameof<SqliteEloDataService>(), () => {
 
     const matches = await dataService.getMatchHistory(user1, user2, server1, now);
 
-    let foundOneMsBeforeMatch = false;;
+    let foundOneMsBeforeMatch = false;
     let foundNowMatch = false;
     let foundOneMsAfterMatch = false;
 
@@ -223,14 +226,12 @@ describe(nameof<SqliteEloDataService>(), () => {
     it('persists matches across data services instances', async () => {
       const service = await getPersistentService();
 
-      const user1 = SnowflakeUtil.generate();
-      const user2 = SnowflakeUtil.generate();
       const server = SnowflakeUtil.generate();
       const date = new Date();
       const winner = user1;
       const author = user2;
 
-      await service.addMatch(user1, user2, server, date, winner, author)
+      await service.addMatch(user1, user2, server, date, winner, author);
 
       await service.close();
 
@@ -241,7 +242,7 @@ describe(nameof<SqliteEloDataService>(), () => {
       expect(matchHistory[0].date.getTime()).toBe(date.getTime());
       expect(matchHistory[0].author).toBe(author);
       expect(matchHistory[0].winner).toBe(winner);
-      
+
       await nextService.close();
     });
   });

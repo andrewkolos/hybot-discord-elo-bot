@@ -47,7 +47,7 @@ export class SqliteEloDataService implements EloDataService {
   private readonly matchTableName: string;
 
   private constructor(private readonly db: Database<sqlite3.Database, sqlite3.Statement>,
-    userTableName: string, matchTableName: string) {
+                      userTableName: string, matchTableName: string) {
 
     userTableName = sanitizeTableName(userTableName);
     matchTableName = sanitizeTableName(matchTableName);
@@ -84,7 +84,13 @@ export class SqliteEloDataService implements EloDataService {
   }
 
   /** @inheritdoc */
-  public async addMatch(user: string, otherUser: string, server: string, date: Date, winner: string, author: string): Promise<void> {
+  public async addMatch(user: string,
+                        otherUser: string,
+                        server: string,
+                        date: Date,
+                        winner: string,
+                        author: string): Promise<void> {
+
     const [user1, user2] = getUsersAsOrderedPair(user, otherUser);
 
     const query = `INSERT INTO ${this.matchTableName} (user1,user2,server,date,winner,author) VALUES (?,?,?,?,?,?)`;
@@ -92,7 +98,11 @@ export class SqliteEloDataService implements EloDataService {
   }
 
   /** @inheritdoc */
-  public async getMatchHistory(user: string, otherUser: string, server: string, startDate?: Date, endDate?: Date): Promise<DatedMatchOutcome[]> {
+  public async getMatchHistory(user: string,
+                               otherUser: string,
+                               server: string,
+                               startDate?: Date,
+                               endDate?: Date): Promise<DatedMatchOutcome[]> {
     const [user1, user2] = getUsersAsOrderedPair(user, otherUser);
 
     const params: any[] = [];
@@ -115,7 +125,7 @@ export class SqliteEloDataService implements EloDataService {
     return results.map((result: any) => ({
       date: new Date(result.date),
       winner: result.winner,
-      author: result.author
+      author: result.author,
     }));
   }
 
@@ -143,7 +153,7 @@ export class SqliteEloDataService implements EloDataService {
    */
   private async tableExists(tableName: string) {
     tableName = sanitizeTableName(tableName);
-    const query = "SELECT name FROM sqlite_master WHERE type='table' AND name=?";
+    const query = 'SELECT name FROM sqlite_master WHERE type=\'table\' AND name=?';
     const resp = await this.db.get(query, tableName);
     return resp != null;
   }
@@ -190,7 +200,7 @@ export class SqliteEloDataService implements EloDataService {
   }
 
   private async createTablesIfDoNotExist(): Promise<this> {
-    const tasks: Promise<unknown>[] = [];
+    const tasks: Array<Promise<unknown>> = [];
     if (!await this.tableExists(this.userTableName)) tasks.push(this.createUserTable());
     if (!await this.tableExists(this.matchTableName)) tasks.push(this.createMatchTable());
     await Promise.all(tasks);
