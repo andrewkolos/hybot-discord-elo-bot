@@ -5,7 +5,8 @@
   "scripts": {
     "test": "jest --verbose",
     "test:debug": "node --inspect-brk=0.0.0.0 node_modules/jest/bin/jest.js --runInBand --config jest.config.js",
-    "start": "ts-node --pretty src/main.ts"
+    "start": "ts-node --pretty src/main.ts",
+    "start:prod": "docker build . -t hybot/hybot && docker run hybot/hybot --env-file ./.env"
   },
   "keywords": [],
   "author": "",
@@ -21,7 +22,7 @@
     "express": "^4.16.2",
     "git": "^0.1.5",
     "jstreemap": "^1.28.2",
-    "mysql": "^2.15.0",
+    "mysql": "^2.18.1",
     "npm": "^6.9.0",
     "pg": "7.x",
     "read": "^1.0.7",

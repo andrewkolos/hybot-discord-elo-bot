@@ -1,8 +1,0 @@
-https://anidiotsguide.gitbooks.io/discord-js-bot-guide/coding-guides/storing-data-in-a-persistent-collection.html
-https://gist.github.com/eslachance/5c539ccebde9fa76340fb5d54889aa22
-https://anidiotsguide.gitbooks.io/discord-js-bot-guide/coding-guides/using-persistentcollections.html
-
-dependencies:
-enamp
-enmap-level
-discord.js

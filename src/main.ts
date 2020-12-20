@@ -3,16 +3,18 @@ import { EloDataService } from './bot/data/elo-data-service';
 import { GetRating, GetTop, Ping, Record, Roll, Timer } from './bot/command/commands';
 import { Help } from './bot/command/commands/help';
 import { botConfig } from './config/bot-config';
-import { dbConfig } from './config/db-config';
-import { SqliteEloDataService } from './bot/data/sql/sqlite-implementation/sqlite-data-service';
+import mysql from 'mysql';
+import { dbConfig } from './config/mysql-config';
+import { MySqlEloDataService } from './bot/data/sql/mysql-implementation/mysql-elo-data-service';
 
 async function start() {
-  const dataService = await SqliteEloDataService.createPersistentService({
-    filePath: dbConfig.dbFilename,
-    matchTableName: 'matches',
-    userTableName: 'users',
-  });
-  startBot(dataService);
+  const config = dbConfig;
+  const pool = mysql.createPool({
+    ...config, connectionLimit: 10,
+    connectTimeout: 60 * 60 * 1000,
+    timeout: 60 * 60 * 1000});
+  const ds = await MySqlEloDataService.createService(pool, 'user', 'match', true);
+  startBot(ds);
 }
 
 async function startBot(dataService: EloDataService) {
